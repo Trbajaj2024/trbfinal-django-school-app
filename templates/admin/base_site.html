@@ -1,0 +1,199 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Sajan Bajaj Shiksha Sankul Admin{% endblock %}
+
+{% block extrastyle %}
+<style>
+    :root {
+        --primary: #4e73df;
+        --secondary: #6f42c1;
+        --accent: #f8f9fc;
+        --primary-fg: #fff;
+        --body-fg: #333;
+        --body-bg: #f8f9fc;
+        --darkened-bg: #f8f9fc;
+        --selected-row: #f8f9fc;
+    }
+
+    #header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: var(--primary-fg);
+        padding: 1rem 2rem;
+    }
+
+    #branding h1 {
+        font-weight: 600;
+        color: var(--primary-fg);
+        display: flex;
+        align-items: center;
+    }
+
+    #branding img {
+        height: 60px;
+        width: auto;
+        margin-right: 15px;
+    }
+
+    #site-name a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--primary-fg);
+    }
+
+    .module h2, .module caption, .inline-group h2 {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: var(--primary-fg);
+        padding: 0.5rem 1rem;
+    }
+
+    div.breadcrumbs {
+        background: var(--accent);
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid #e3e6f0;
+    }
+
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: var(--primary);
+        color: var(--primary-fg);
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        border: none;
+        font-weight: 500;
+    }
+
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+        background: var(--secondary);
+    }
+
+    .button.default, input[type=submit].default, .submit-row input.default {
+        background: var(--secondary);
+    }
+
+    .button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+        background: var(--primary);
+    }
+
+    .object-tools a:link, .object-tools a:visited {
+        background: var(--primary);
+        color: var(--primary-fg);
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+    }
+
+    .object-tools a:hover {
+        background: var(--secondary);
+    }
+
+    #changelist-filter h2 {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: var(--primary-fg);
+        padding: 0.5rem 1rem;
+    }
+
+    #changelist-filter li.selected a {
+        color: var(--primary);
+    }
+
+    .paginator a:link, .paginator a:visited {
+        background: var(--primary);
+        color: var(--primary-fg);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+    }
+
+    .paginator a:hover {
+        background: var(--secondary);
+    }
+
+    .paginator a.showall {
+        background: var(--accent);
+        color: var(--primary);
+        border: 1px solid var(--primary);
+    }
+
+    .paginator a.showall:hover {
+        background: var(--primary);
+        color: var(--primary-fg);
+    }
+
+    .action-checkbox {
+        accent-color: var(--primary);
+    }
+
+    #changelist table thead th {
+        background: var(--accent);
+        color: var(--body-fg);
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+    }
+
+    #changelist table tbody td {
+        padding: 0.5rem 1rem;
+    }
+
+    #changelist table tbody tr:hover {
+        background: var(--selected-row);
+    }
+
+    .field-box {
+        background: var(--accent);
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .field-box label {
+        color: var(--body-fg);
+        font-weight: 500;
+    }
+
+    .field-box input, .field-box select, .field-box textarea {
+        border: 1px solid #e3e6f0;
+        border-radius: 4px;
+        padding: 0.5rem;
+    }
+
+    .field-box input:focus, .field-box select:focus, .field-box textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+    .errorlist {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        margin: 0.5rem 0;
+    }
+
+    .success {
+        background: #d4edda;
+        color: #155724;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        margin: 0.5rem 0;
+    }
+
+    .warning {
+        background: #fff3cd;
+        color: #856404;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        margin: 0.5rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <img src="{% static 'images/logo.png' %}" alt="Sajan Bajaj Shiksha Sankul Logo">
+        <span>Sajan Bajaj Shiksha Sankul Admin</span>
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %} 

@@ -1,0 +1,148 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Academic Calendar - Sajan Bajaj Shiksha Sankul{% endblock %}
+
+{% block extra_head %}
+<style>
+    .calendar-event {
+        border-left: 4px solid;
+        margin-bottom: 1rem;
+        transition: transform 0.2s;
+    }
+    .calendar-event:hover {
+        transform: translateX(5px);
+    }
+    .event-holiday { border-color: #dc3545; }
+    .event-exam { border-color: #ffc107; }
+    .event-event { border-color: #0d6efd; }
+    .event-activity { border-color: #198754; }
+    .event-other { border-color: #6c757d; }
+    
+    .event-badge {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .month-section {
+        scroll-margin-top: 100px;
+    }
+    
+    .calendar-nav {
+        position: sticky;
+        top: 80px;
+        z-index: 100;
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .important-event {
+        background-color: rgba(255, 193, 7, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Calendar Navigation -->
+        <div class="col-lg-3">
+            <div class="calendar-nav">
+                <h5 class="mb-3">Quick Navigation</h5>
+                <div class="list-group">
+                    {% regroup events by start_date|date:"F Y" as events_by_month %}
+                    {% for month in events_by_month %}
+                    <a href="#month-{{ month.grouper|slugify }}" 
+                       class="list-group-item list-group-item-action">
+                        {{ month.grouper }}
+                    </a>
+                    {% endfor %}
+                </div>
+                
+                <h5 class="mt-4 mb-3">Event Types</h5>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <span class="badge bg-danger me-2">Holiday</span>
+                    </div>
+                    <div class="list-group-item">
+                        <span class="badge bg-warning me-2">Exam</span>
+                    </div>
+                    <div class="list-group-item">
+                        <span class="badge bg-primary me-2">School Event</span>
+                    </div>
+                    <div class="list-group-item">
+                        <span class="badge bg-success me-2">Activity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Events -->
+        <div class="col-lg-9">
+            <h1 class="display-4 mb-4">Academic Calendar</h1>
+            
+            {% if events %}
+                {% regroup events by start_date|date:"F Y" as events_by_month %}
+                {% for month in events_by_month %}
+                    <div id="month-{{ month.grouper|slugify }}" class="month-section mb-5">
+                        <h2 class="h3 mb-4">{{ month.grouper }}</h2>
+                        
+                        {% for event in month.list %}
+                        <div class="card calendar-event event-{{ event.event_type }} {% if event.is_important %}important-event{% endif %}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title mb-1">{{ event.title }}</h5>
+                                        <p class="card-text text-muted mb-2">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            {% if event.end_date %}
+                                                {{ event.start_date|date:"j M" }} - {{ event.end_date|date:"j M, Y" }}
+                                            {% else %}
+                                                {{ event.start_date|date:"j M, Y" }}
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <span class="badge event-badge bg-{{ event.event_type|yesno:'danger,warning,primary,success,secondary' }}">
+                                        {{ event.get_event_type_display }}
+                                    </span>
+                                </div>
+                                {% if event.description %}
+                                <p class="card-text mt-2">{{ event.description }}</p>
+                                {% endif %}
+                                {% if event.is_important %}
+                                <div class="mt-2">
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-star me-1"></i>Important
+                                    </span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>No events have been scheduled yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+{% endblock %} 

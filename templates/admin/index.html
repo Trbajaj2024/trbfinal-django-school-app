@@ -1,0 +1,204 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .dashboard-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        transition: transform 0.2s;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .dashboard-card h2 {
+        color: var(--primary);
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent);
+    }
+
+    .dashboard-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .dashboard-card li {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--accent);
+    }
+
+    .dashboard-card li:last-child {
+        border-bottom: none;
+    }
+
+    .dashboard-card a {
+        color: var(--body-fg);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .dashboard-card a:hover {
+        color: var(--primary);
+    }
+
+    .dashboard-card a:before {
+        content: "→";
+        margin-right: 8px;
+        color: var(--primary);
+    }
+
+    .recent-actions {
+        grid-column: 1 / -1;
+    }
+
+    .recent-actions h2 {
+        margin-bottom: 20px;
+    }
+
+    .recent-actions table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .recent-actions th {
+        background: var(--accent);
+        padding: 12px;
+        text-align: left;
+    }
+
+    .recent-actions td {
+        padding: 12px;
+        border-bottom: 1px solid var(--accent);
+    }
+
+    .recent-actions tr:hover {
+        background: var(--selected-row);
+    }
+
+    .app-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .app-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        transition: transform 0.2s;
+    }
+
+    .app-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .app-card h2 {
+        color: var(--primary);
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent);
+    }
+
+    .app-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .app-card li {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--accent);
+    }
+
+    .app-card li:last-child {
+        border-bottom: none;
+    }
+
+    .app-card a {
+        color: var(--body-fg);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .app-card a:hover {
+        color: var(--primary);
+    }
+
+    .app-card a:before {
+        content: "→";
+        margin-right: 8px;
+        color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    {% for app in app_list %}
+    <div class="app-card">
+        <h2>{{ app.name }}</h2>
+        <ul>
+            {% for model in app.models %}
+            <li>
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                {{ model.name }}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+
+{% if recent_actions %}
+<div class="recent-actions">
+    <h2>{% trans 'Recent actions' %}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans 'Action' %}</th>
+                <th>{% trans 'User' %}</th>
+                <th>{% trans 'Object' %}</th>
+                <th>{% trans 'Date/time' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for action in recent_actions %}
+            <tr>
+                <td>{{ action.action_flag }}</td>
+                <td>{{ action.user }}</td>
+                <td>{{ action.object_repr }}</td>
+                <td>{{ action.action_time|date:"DATETIME_FORMAT" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %} 

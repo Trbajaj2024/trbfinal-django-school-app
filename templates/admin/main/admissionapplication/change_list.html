@@ -1,0 +1,231 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .admission-list {
+        margin: 20px;
+    }
+
+    .admission-filters {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .admission-filters h2 {
+        color: var(--primary);
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent);
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-group label {
+        margin-bottom: 8px;
+        color: var(--body-fg);
+        font-weight: bold;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        padding: 8px;
+        border: 1px solid var(--accent);
+        border-radius: 4px;
+        background: white;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .results {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .results table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .results th {
+        background: var(--accent);
+        padding: 12px;
+        text-align: left;
+        color: var(--body-fg);
+        font-weight: bold;
+    }
+
+    .results td {
+        padding: 12px;
+        border-bottom: 1px solid var(--accent);
+    }
+
+    .results tr:hover {
+        background: var(--selected-row);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-approved {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background-color 0.2s;
+    }
+
+    .action-button.view {
+        background: var(--primary);
+        color: white;
+    }
+
+    .action-button.edit {
+        background: var(--accent);
+        color: var(--body-fg);
+    }
+
+    .action-button.delete {
+        background: #dc3545;
+        color: white;
+    }
+
+    .action-button:hover {
+        opacity: 0.9;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 8px 12px;
+        border: 1px solid var(--accent);
+        border-radius: 4px;
+        text-decoration: none;
+        color: var(--body-fg);
+    }
+
+    .pagination a:hover {
+        background: var(--accent);
+    }
+
+    .pagination .current {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admission-list">
+    <div class="admission-filters">
+        <h2>{% trans 'Filter Applications' %}</h2>
+        <form method="get">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="status">{% trans 'Status' %}</label>
+                    <select name="status" id="status">
+                        <option value="">{% trans 'All' %}</option>
+                        <option value="pending">{% trans 'Pending' %}</option>
+                        <option value="approved">{% trans 'Approved' %}</option>
+                        <option value="rejected">{% trans 'Rejected' %}</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="grade">{% trans 'Grade' %}</label>
+                    <select name="grade" id="grade">
+                        <option value="">{% trans 'All' %}</option>
+                        {% for grade in grades %}
+                        <option value="{{ grade }}">{{ grade }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="search">{% trans 'Search' %}</label>
+                    <input type="text" name="q" id="search" placeholder="{% trans 'Search by name or email' %}">
+                </div>
+            </div>
+            <button type="submit" class="action-button view">{% trans 'Apply Filters' %}</button>
+        </form>
+    </div>
+
+    <div class="results">
+        {% result_list cl %}
+    </div>
+
+    {% if cl.result_count %}
+    <div class="pagination">
+        {% if cl.page_num > 1 %}
+        <a href="?page={{ cl.page_num|add:"-1" }}">{% trans 'Previous' %}</a>
+        {% endif %}
+        
+        {% for i in cl.paginator.page_range %}
+        {% if i == cl.page_num %}
+        <span class="current">{{ i }}</span>
+        {% else %}
+        <a href="?page={{ i }}">{{ i }}</a>
+        {% endif %}
+        {% endfor %}
+        
+        {% if cl.page_num < cl.paginator.num_pages %}
+        <a href="?page={{ cl.page_num|add:"1" }}">{% trans 'Next' %}</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

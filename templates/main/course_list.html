@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Course Details - TRBSS{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg hover-card">
+                <div class="card-body text-center p-5">
+                    <div class="display-4 text-primary mb-4">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h1 class="h2 mb-4">Course Will Start Soon</h1>
+                    <p class="lead mb-4">We are currently preparing the course materials and will notify you when it's ready to begin.</p>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Please check back later or contact us for more information about the course start date.
+                    </div>
+                    <a href="{% url 'home' %}" class="btn btn-primary mt-4">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

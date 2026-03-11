@@ -1,0 +1,311 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Home - TRBSS{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Enhanced hover effects */
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    /* Enhanced carousel */
+    .carousel-item {
+        height: 700px;
+    }
+    .carousel-item img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+    .carousel-caption {
+        background: rgba(0,0,0,0.5);
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 800px;
+        margin: 0 auto;
+        bottom: 100px;
+    }
+    
+    .carousel-caption h2 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 1.5rem;
+    }
+
+    /* Animated statistics */
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #4e73df;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .carousel-item {
+            height: 400px;
+        }
+        .carousel-caption h2 {
+            font-size: 2rem;
+        }
+        .carousel-caption p {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Carousel Section -->
+<div id="mainCarousel" class="carousel slide mb-5 shadow-lg" data-bs-ride="carousel" style="border-radius: var(--app-card-border-radius); overflow: hidden;">
+    <div class="carousel-indicators">
+        {% for carousel in carousels %}
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="{{ forloop.counter0 }}" 
+                {% if forloop.first %}class="active" aria-current="true"{% endif %} 
+                aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+    </div>
+    <div class="carousel-inner">
+        {% for carousel in carousels %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            {% if carousel.image %}
+            <img src="{{ carousel.image.url }}" class="d-block w-100" alt="{{ carousel.title }}">
+            {% else %}
+            <div class="placeholder-image-container d-block w-100 bg-secondary-subtle">
+                <i class="fas fa-image placeholder-icon"></i>
+            </div>
+            {% endif %}
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold text-shadow animate__animated animate__fadeInDown">{{ carousel.title }}</h2>
+                {% if carousel.subtitle %}
+                <p class="lead text-shadow animate__animated animate__fadeInUp">{{ carousel.subtitle }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="carousel-item active">
+             <div class="placeholder-image-container d-block w-100 bg-secondary-subtle d-flex align-items-center justify-content-center text-muted">
+                 <div>
+                     <i class="fas fa-film placeholder-icon mb-2"></i>
+                     <p>No carousel items yet. Add some in the admin!</p>
+                 </div>
+             </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if carousels|length > 1 %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+    {% endif %}
+</div>
+
+<!-- Statistics Section (Commented out as in original) -->
+<!--
+<div class="container mb-5">
+    <div class="row g-4">
+        {% for stat in stats %}
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm text-center hover-card">
+                <div class="card-body">
+                    <div class="display-4 text-primary mb-3">
+                        <i class="{{ stat.icon }}"></i>
+                    </div>
+                    <h3 class="h5">{{ stat.name }}</h3>
+                    <p class="display-6 text-primary mb-0">{{ stat.value }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+-->
+
+<!-- Featured Programs -->
+{% if featured_programs %}
+<div id="featured-programs" class="bg-light section-padding mb-5">
+    <div class="container">
+        <h2 class="text-center mb-5"><i class="fas fa-star text-warning me-2"></i>Our Featured Programs</h2>
+        <div class="row g-4 justify-content-center">
+            {% for program in featured_programs %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card text-center">
+                    <div class="card-body p-4">
+                        <div class="display-4 text-primary mb-3">
+                            <i class="{{ program.icon|default:'fas fa-chalkboard-teacher' }}"></i>
+                        </div>
+                        <h3 class="h4 mb-3">{{ program.title }}</h3>
+                        <p class="text-muted mb-0">{{ program.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Upcoming Events -->
+{% if upcoming_events %}
+<div id="upcoming-events" class="container section-padding mb-5">
+    <h2 class="text-center mb-5"><i class="fas fa-calendar-check text-info me-2"></i>Upcoming Events</h2>
+    <div class="row g-4 justify-content-center">
+        {% for event in upcoming_events %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm hover-card">
+                {% if event.image %}
+                <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
+                {% else %}
+                 <div class="card-img-top bg-secondary-subtle placeholder-image-container--small">
+                     <i class="fas fa-calendar-day placeholder-icon--small"></i>
+                 </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="mb-2 text-primary small">
+                        <i class="fas fa-calendar-alt me-1"></i> {{ event.date|date:"F d, Y" }}
+                        <i class="fas fa-clock ms-2 me-1"></i> {{ event.date|date:"P" }}
+                    </div>
+                    <h3 class="h5 mb-3">{{ event.title }}</h3>
+                    <p class="text-muted mb-0">{{ event.description|truncatewords:20 }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Live Classes -->
+{% if live_classes %}
+<div id="live-classes" class="bg-primary text-white section-padding mb-5">
+    <div class="container">
+        <h2 class="text-center mb-5 text-white"><i class="fas fa-video me-2"></i>Live Classes Starting Soon</h2>
+        <div class="row g-4 justify-content-center">
+            {% for class in live_classes %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card bg-white text-dark h-100 shadow-sm hover-card">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h5 text-primary mb-3">{{ class.title }}</h3>
+                        <p class="text-muted mb-3 flex-grow-1">{{ class.description|truncatewords:15 }}</p>
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-auto">
+                            <div class="text-muted">
+                                <small>
+                                    <i class="fas fa-calendar-alt me-1"></i> {{ class.date|date:"M d" }} -
+                                    <i class="fas fa-clock ms-1 me-1"></i> {{ class.date|date:"g:i A T" }}
+                                </small>
+                            </div>
+                            <a href="{{ class.link }}" target="_blank" class="btn btn-sm btn-primary">Join Class</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Featured Courses -->
+{% if courses %}
+<div id="featured-courses" class="container section-padding mb-5">
+    <h2 class="text-center mb-5"><i class="fas fa-graduation-cap text-success me-2"></i>Featured Courses</h2>
+    <div class="row g-4 justify-content-center">
+        {% for course in courses %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm hover-card">
+                {% if course.image %}
+                <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+                {% else %}
+                 <div class="card-img-top bg-secondary-subtle placeholder-image-container--small">
+                     <i class="fas fa-book-open placeholder-icon--small"></i>
+                 </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h3 class="h5 mb-3">{{ course.title }}</h3>
+                    <p class="text-muted mb-3 flex-grow-1">{{ course.description|truncatewords:20 }}</p>
+                    <a href="{% url 'course_detail' course.id %}" class="btn btn-primary mt-auto align-self-start">Learn More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Achievements -->
+{% if achievements %}
+<div id="achievements" class="bg-light section-padding mb-5">
+    <div class="container">
+        <h2 class="text-center mb-5"><i class="fas fa-trophy text-info me-2"></i>Our Achievements</h2>
+        <div class="row g-4 justify-content-center">
+            {% for achievement in achievements %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    {% if achievement.image %}
+                    <img src="{{ achievement.image.url }}" class="card-img-top" alt="{{ achievement.title }}">
+                    {% else %}
+                     <div class="card-img-top bg-secondary-subtle placeholder-image-container--small">
+                         <i class="fas fa-award placeholder-icon--small"></i>
+                     </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="mb-2 text-primary small">
+                            <i class="fas fa-calendar-check me-1"></i> {{ achievement.date|date:"F Y" }}
+                        </div>
+                        <h3 class="h5 mb-3">{{ achievement.title }}</h3>
+                        <p class="text-muted mb-0">{{ achievement.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Call to Action -->
+<div class="container section-padding">
+    <div class="bg-gradient-primary-to-secondary text-white text-center p-5 rounded shadow-lg hover-card" 
+         style="--bs-gradient: linear-gradient(135deg, #4e73df 0%, #6f42c1 100%); background: var(--bs-gradient);">
+        <i class="fas fa-rocket fa-3x mb-3 text-white-50"></i>
+        <h2 class="mb-3 text-white">Ready to Start Your Journey?</h2>
+        <p class="lead mb-4">Join us and be part of our growing community of learners and achievers.</p>
+        <a href="{% url 'admissions' %}" class="btn btn-light btn-lg fw-bold px-4 hover-card">Apply Now <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add animation to carousel items
+    document.querySelectorAll('.carousel-item').forEach(item => {
+        item.addEventListener('slide.bs.carousel', function () {
+            const caption = this.querySelector('.carousel-caption');
+            if (caption) {
+                caption.classList.remove('animate__fadeInDown', 'animate__fadeInUp');
+                void caption.offsetWidth; // Trigger reflow
+                caption.classList.add('animate__fadeInDown', 'animate__fadeInUp');
+            }
+        });
+    });
+</script>
+{% endblock %} 

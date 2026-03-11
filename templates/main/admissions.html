@@ -1,0 +1,223 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Admissions - TRBSS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .admission-form {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .form-section {
+        border-bottom: 1px solid #eee;
+        padding: 2rem 0;
+    }
+    .form-section:last-child {
+        border-bottom: none;
+    }
+    .form-section h3 {
+        color: #4e73df;
+        margin-bottom: 1.5rem;
+    }
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+    .btn-submit {
+        background: linear-gradient(135deg, #4e73df 0%, #6f42c1 100%);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+    }
+    .btn-submit:hover {
+        background: linear-gradient(135deg, #3e63cf 0%, #5f32b1 100%);
+    }
+    .success-message {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4 mb-3">Admission Process</h1>
+                <p class="lead text-muted">Join our community of learners and achievers</p>
+            </div>
+
+            <div class="admission-form p-4 p-md-5">
+                <form method="post" id="admissionForm" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Student Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user-graduate me-2"></i>Student Information</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="id_first_name" class="form-label">First Name</label>
+                                {{ form.first_name }}
+                                <div class="invalid-feedback">Please enter first name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_last_name" class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                                <div class="invalid-feedback">Please enter last name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_date_of_birth" class="form-label">Date of Birth</label>
+                                {{ form.date_of_birth }}
+                                <div class="invalid-feedback">Please enter date of birth.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_gender" class="form-label">Gender</label>
+                                {{ form.gender }}
+                                <div class="invalid-feedback">Please select gender.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-address-card me-2"></i>Contact Information</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="id_email" class="form-label">Email Address</label>
+                                {{ form.email }}
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_phone" class="form-label">Phone Number</label>
+                                {{ form.phone }}
+                                <div class="invalid-feedback">Please enter phone number.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="id_address" class="form-label">Address</label>
+                                {{ form.address }}
+                                <div class="invalid-feedback">Please enter address.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="id_city" class="form-label">City</label>
+                                {{ form.city }}
+                                <div class="invalid-feedback">Please enter city.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="id_state" class="form-label">State</label>
+                                {{ form.state }}
+                                <div class="invalid-feedback">Please enter state.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="id_pincode" class="form-label">PIN Code</label>
+                                {{ form.pincode }}
+                                <div class="invalid-feedback">Please enter PIN code.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Academic Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap me-2"></i>Academic Information</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="id_previous_school" class="form-label">Previous School</label>
+                                {{ form.previous_school }}
+                                <div class="invalid-feedback">Please enter previous school.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_grade_applying_for" class="form-label">Grade Applying For</label>
+                                {{ form.grade_applying_for }}
+                                <div class="invalid-feedback">Please enter grade applying for.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parent/Guardian Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-users me-2"></i>Parent/Guardian Information</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="id_parent_name" class="form-label">Parent's/Guardian's Name</label>
+                                {{ form.parent_name }}
+                                <div class="invalid-feedback">Please enter parent's/guardian's name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_parent_occupation" class="form-label">Parent's/Guardian's Occupation</label>
+                                {{ form.parent_occupation }}
+                                <div class="invalid-feedback">Please enter parent's/guardian's occupation.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_parent_email" class="form-label">Parent's/Guardian's Email</label>
+                                {{ form.parent_email }}
+                                <div class="invalid-feedback">Please enter parent's/guardian's email.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_parent_phone" class="form-label">Parent's/Guardian's Phone</label>
+                                {{ form.parent_phone }}
+                                <div class="invalid-feedback">Please enter parent's/guardian's phone.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-info-circle me-2"></i>Additional Information</h3>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="id_additional_notes" class="form-label">Additional Notes</label>
+                                {{ form.additional_notes }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Application
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Success Message -->
+                <div class="success-message text-center mt-4">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle fa-2x mb-3"></i>
+                        <h4 class="alert-heading">Application Submitted Successfully!</h4>
+                        <p>Thank you for your interest in TRBSS. We have received your application and will contact you soon.</p>
+                        <hr>
+                        <p class="mb-0">You will receive a confirmation email shortly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                } else {
+                    event.preventDefault()
+                    // Show success message
+                    document.querySelector('.success-message').style.display = 'block'
+                    // Hide form
+                    document.getElementById('admissionForm').style.display = 'none'
+                    // Submit form
+                    form.submit()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %} 
