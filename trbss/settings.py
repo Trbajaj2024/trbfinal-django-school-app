@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-your-secret-key-here'
 DEBUG = True  # Temporarily set to True for initial setup
 
 # Add your PythonAnywhere domain here
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'vikastrbajaj2024.pythonanywhere.com']
+ALLOWED_HOSTS = ["*"]
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
