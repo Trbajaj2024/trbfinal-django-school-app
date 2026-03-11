@@ -2,4 +2,4 @@ Django>=4.2.7
 gunicorn
 whitenoise
 django-import-export
-Pillow
+Pillowreportlab==4.4.10
