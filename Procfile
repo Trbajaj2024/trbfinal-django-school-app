@@ -1,1 +1,1 @@
-web: gunicorn trbss.wsgi
+web: gunicorn trbss.wsgi:application
